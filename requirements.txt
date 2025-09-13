@@ -1,0 +1,15 @@
+joblib==1.4.2
+langchain_community==0.3.29
+langchain_core==0.3.76
+langchain_text_splitters==0.3.11
+numpy==2.3.3
+openai==1.107.2
+pydantic==2.11.8
+pymilvus==2.5.11
+pymilvus_model==0.3.2
+scikit_learn==1.7.2
+torch==2.7.0
+tqdm==4.67.1
+transformers==4.53.0
+umap_learn==0.5.7
+vllm==0.9.1
