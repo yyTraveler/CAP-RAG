@@ -13,7 +13,6 @@ from langchain_text_splitters import TokenTextSplitter
 
 from config.pre_config import pre_args
 from .raptor import group_chunks
-from interface.prompts import preparse_prompt_schema
 from interface.entity import Sample, Note, SubNote
 from interface.vs_domain import CAPSchema, MilvusDao
 from interface.chat import LLMChat
@@ -48,12 +47,6 @@ class PreProcessor:
         except Exception as e:
             pass
     
-    def _prompt_both(self, chunk: str):
-        return [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Given context {chunk}, read and understand the context above and fill the form as the following json template: {preparse_prompt_schema}"}
-        ]
-    
     def _cluster_qulaity(self, datas: List[QualityItem]) -> List[Sample]:
         ans: List[Sample] = []
         for item in tqdm(datas, total=len(datas), desc="clustering quality dataset", disable=False):
@@ -87,9 +80,9 @@ class PreProcessor:
         
         for i in tqdm(range(0, total, concurrency), total=(total + concurrency - 1) // concurrency, desc="preparse samples in batch mode (concurrent): ", disable=False):
             batch = samples[i:i + concurrency]
-            prompts = [self._prompt_both(s.chunk) for s in batch]
+            chunks = [s.chunk for s in batch]
             
-            notes = asyncio.run(LLMChat.batch_chunk_preparse(pre_args.model_name, prompts))
+            notes = asyncio.run(LLMChat.batch_chunk_preparse(pre_args.model_name, chunks))
             for sample, note in zip(batch, notes):
                 if note:
                     note.reference = sample.chunk

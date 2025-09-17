@@ -1,13 +1,9 @@
-import json
 import asyncio
-from openai import OpenAI
 from joblib import Memory
 import traceback
 
 from interface.entity import Note, SubNote
 from interface.models import get_openai_client
-from interface.prompts import preparse_prompt_schema
-from config.llm_config import llm_args
 from config.cache_config import cache_args
 
 memory = Memory(location=cache_args.cache_dir, verbose=0)

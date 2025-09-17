@@ -2,7 +2,28 @@
 
 《基于聚类重组和预解析的检索增强生成方法》论文实验代码
 
-## 环境准备
+## 实现说明
+
+### 聚类算法
+
+聚类算法的实现参见一下两个文件，这个实现参考了[RAPTOR](https://github.com/parthsarthi03/raptor):
+- preprocess/raptor.py
+- preprocess/raptor2.py
+
+### 预解析算法
+预解析提示词参见：
+- interface/chat.py  实际和LLM交互的代码，可以看到完整的提示词
+- interface/entity.py 预解析算法的格式化输出结构（Note类型）
+- interface/prompts.py 基于pydantic序列化的json格式约束
+
+这里展示下实际结构，chunk变量是分块的文字内容
+
+```
+ "Given context {chunk}, read and understand the context above and then parse it in this json format {"query":"","summary":"","reference":"","points":[{"query":"","summary":"","reference":""}]} ."
+```
+
+
+## 复现环境准备
 使用conda环境，python=3.12.8，详见requirements.txt
 
 

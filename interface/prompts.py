@@ -3,7 +3,7 @@ preparse_prompt_schema = {
     "properties": {
         "query": {
             "type": "string",
-            "description": "propose a possiable query for this context."
+            "description": "propose a possiable question which is deep and could get the answer from the content field."
         },
         "summary": {
             "type": "string",
@@ -14,7 +14,7 @@ preparse_prompt_schema = {
             "items": {
                 "$ref": "#/$defs/points"
             },
-            "description": "list all detailed points of this context and also conclude some possiable deep questions and answers."
+            "description": "a list of main points of the text"
         }
     },
     "$defs": {
