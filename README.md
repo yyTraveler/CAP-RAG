@@ -16,12 +16,61 @@
 - interface/entity.py 预解析算法的格式化输出结构（Note类型）
 - interface/prompts.py 基于pydantic序列化的json格式约束
 
-这里展示下实际结构，chunk变量是分块的文字内容
-
+这里展示下实际提示词内容，chunk变量是分块的文字内容
 ```
  "Given context {chunk}, read and understand the context above and then parse it in this json format {"query":"","summary":"","reference":"","points":[{"query":"","summary":"","reference":""}]} ."
 ```
 
+interface/prompts.py 的输出结构约束内容，在和上述提示词一起发送给LLM Server以获取结构化输出
+```python
+preparse_prompt_schema = {
+    "type": "json_schema",
+    "properties": {
+        "query": {
+            "type": "string",
+            "description": "propose a possiable question which is deep and could get the answer from the content field."
+        },
+        "summary": {
+            "type": "string",
+            "description": "a detailed description of this context. you should make sure this description can greatly help reader undestand the original text."
+        },
+        "points": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/points"
+            },
+            "description": "a list of main points of the text"
+        }
+    },
+    "$defs": {
+        "points": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "propose a possiable question which is deep and could get the answer from the content field."
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "the main idea of this point or the standard answer to the query."
+                },
+                "reference": {
+                    "type": "string",
+                    "description": "the original text for this point."
+                }
+            },
+            "required": [
+                "query",
+                "summary"
+                "reference"
+            ],
+            "additionalProperties": False
+        }
+    },
+    "additionalProperties": False,
+    "required": ["query", "summary", "points"]
+}
+```
 
 ## 复现环境准备
 使用conda环境，python=3.12.8，详见requirements.txt
